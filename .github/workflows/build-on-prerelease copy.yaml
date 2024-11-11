@@ -7,8 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    environment: dev
+    runs-on: ubuntu-latest 
 
     steps:
       - name: Check Out Repository
