@@ -11,9 +11,7 @@ jobs:
 
     steps:
       - name: Check Out Repository
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.MYGH_TOKEN }}  
+        uses: actions/checkout@v3 
 
       - name: Tagging
         run: |
