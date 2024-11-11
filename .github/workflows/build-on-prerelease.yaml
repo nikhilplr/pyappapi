@@ -16,7 +16,8 @@ jobs:
       - name: Tagging
         run: |
           TAG_NAME=${{ github.event.release.tag_name }} 
-          echo "${TAG_NAME}"  
+          echo "${TAG_NAME}" 
+          echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV 
 
       - name: Build Docker Image
         run: |
