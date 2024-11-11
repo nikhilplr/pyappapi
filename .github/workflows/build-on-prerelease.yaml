@@ -32,11 +32,11 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          IMAGE_NAME="docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/pyappapi/${{ env.TAG_NAME }}"
-          docker build  ${IMAGE_NAME} . 
+          IMAGE_NAME="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/pyappapi/pyappapi"
+          docker build -t ${IMAGE_NAME}:${{ env.TAG_NAME }} . 
       
       - name: Push Docker Image to GCR
         run: | 
-          IMAGE_NAME="docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/pyappapi/${{ env.TAG_NAME }}"
-          docker push ${IMAGE_NAME}
+          IMAGE_NAME="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/pyappapi/pyappapi"
+          docker push ${IMAGE_NAME}:${{ env.TAG_NAME }}
           
