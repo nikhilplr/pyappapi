@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Check Out Repository
-        uses: actions/checkout@v3
+        uses: actions/create-release@v1
 
       - name: Tagging
         run: |
