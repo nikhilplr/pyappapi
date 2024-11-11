@@ -2,17 +2,18 @@ name: build-on-pre-release
 
 on:
   release:
-    types: 
-      - prereleased
+    types: [prereleased]
 
 jobs:
   build:
     runs-on: ubuntu-latest 
-    environment: dev
+    
 
     steps:
       - name: Check Out Repository
-        uses: actions/checkout@v3
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.MYGH_TOKEN }}  
 
       - name: Tagging
         run: |

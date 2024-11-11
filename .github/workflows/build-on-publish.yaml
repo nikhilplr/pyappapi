@@ -1,0 +1,13 @@
+name: build-on-published
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Tagging
+        run: | 
+          echo "I am triggering"   
