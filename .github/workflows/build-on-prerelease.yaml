@@ -38,5 +38,5 @@ jobs:
       - name: Push Docker Image to GCR
         run: |
           IMAGE_NAME="gcr.io/${{ secrets.GCP_PROJECT_ID }}/pyappapi" 
-          docker push ${IMAGE_NAME}:${env.TAG_NAME}
+          docker push ${IMAGE_NAME}:${{ env.TAG_NAME }}
           
