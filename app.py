@@ -15,6 +15,10 @@ data = {"message": "A python based rest API"}
 def get_data():
     return data
 
+@app.get("/health")
+def get_data():
+    return {"health": "Up Running"}
+
 # Data model for POST request
 class Item(BaseModel):
     name: str
