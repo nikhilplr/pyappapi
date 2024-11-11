@@ -8,7 +8,7 @@ from pydantic import BaseModel
 app = FastAPI()
 
 # Initial data storage
-data = {"message": "Hello, This is a rest Get API!"}
+data = {"message": "A python based rest API"}
 
 # GET request to fetch data
 @app.get("/data")
