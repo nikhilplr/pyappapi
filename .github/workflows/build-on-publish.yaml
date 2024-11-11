@@ -1,6 +1,5 @@
 name: build-on-published
 
-
 on:
   release:
     types: [published]
