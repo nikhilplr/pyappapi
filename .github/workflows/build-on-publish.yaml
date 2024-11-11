@@ -7,19 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest 
-
-    steps:
-      - name: Check Out Repository
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.MYGH_TOKEN }}  
-
+     steps:
       - name: Tagging
-        run: |
-          TAG_NAME=${{ github.event.release.tag_name }} 
-          echo "${TAG_NAME}"  
-
-      - name: Build Docker Image
-        run: |
-          docker build -t pyappapi:${{ env.TAG_NAME }} . 
-          
+        run: | 
+          echo "I am triggering"   
