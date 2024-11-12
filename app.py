@@ -29,3 +29,6 @@ class Item(BaseModel):
 def post_data(item: Item):
     data.update({"name": item.name, "value": item.value})
     return {"status": "Data updated successfully", "data": data}
+
+
+#Test 1
