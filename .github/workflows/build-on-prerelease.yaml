@@ -40,32 +40,3 @@ jobs:
           IMAGE_NAME="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-app-ms-repository/pyappapi"
           docker push ${IMAGE_NAME}:${{ env.TAG_NAME }}
           
-  update-release:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps: 
-      - name: Check Out Repository
-        uses: actions/checkout@v3 
-        
-      - name: Set Up Git Credentials
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Delete Existing 'latest' Tag (if exists)
-        run: |
-          # Check if 'latest' tag exists
-          if git rev-parse --verify --quiet latest; then
-            # Delete the 'latest' tag locally
-            git tag -d latest
-            # Delete the 'latest' tag on remote
-            git push --delete origin latest
-          fi
-
-      - name: Create New 'latest' Tag
-        run: |
-          # Use the release tag as the new reference for 'latest'
-          git tag latest ${{ github.event.release.tag_name }}
-          git push origin latest
-  
