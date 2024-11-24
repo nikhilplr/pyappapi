@@ -38,5 +38,7 @@ jobs:
         export NAME_SPACE=${{ env.NAME_SPACE }}
         export IMAGE_NAME=${{ inputs.IMAGE_NAME }}
         envsubst < deployment.yaml > updated-deployment.yaml
+        envsubst < service.yaml > updated-service.yaml
         kubectl apply -f updated-deployment.yaml
+        kubectl apply -f updated-service.yaml
          
