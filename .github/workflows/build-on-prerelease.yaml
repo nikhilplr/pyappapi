@@ -54,6 +54,7 @@ jobs:
 
     - name: Configure gcloud CLI
       run: |
+        unset CLOUDSDK_CORE_PROJECT
         gcloud config set project my-kubernetes-project-440922
         gcloud config set compute/zone us-central1-c
         gcloud container clusters get-credentials myk8-cluster
