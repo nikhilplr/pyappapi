@@ -17,14 +17,20 @@ jobs:
     # Check out the repository
     - name: Check Out Code
       uses: actions/checkout@v3
+
     - name: Set Up Google Cloud SDK
       uses: google-github-actions/auth@v2
       with:
         credentials_json: ${{ secrets.GCP_KEY }} 
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - name: Set up GKE credentials
+      uses: google-github-actions/get-gke-credentials@v0
+      with:
+        cluster_name: myk8-cluster
+        location: us-central1-c 
     
     - name: Configure gcloud CLI
-      run: |   
-        gcloud config set compute/zone us-central1-c
-        gcloud container clusters get-credentials myk8-cluster
+      run: |    
         kubectl get ns
          
