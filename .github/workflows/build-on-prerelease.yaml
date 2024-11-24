@@ -50,18 +50,10 @@ jobs:
     - name: Set Up Google Cloud SDK
       uses: google-github-actions/auth@v2
       with:
-        credentials_json: ${{ secrets.GCP_KEY }}
-
-    - name: Install GKE Auth Plugin
-      run: |
-        gcloud components install gke-gcloud-auth-plugin
-        echo "USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
+        credentials_json: ${{ secrets.GCP_KEY }} 
     
     - name: Configure gcloud CLI
-      run: |
-        unset CLOUDSDK_CORE_PROJECT
-        gcloud config set project my-kubernetes-project-440922
-        gcloud config set compute/zone us-central1-c
+      run: |  
         gcloud container clusters get-credentials myk8-cluster
         
     - name: Deploy to GKE
