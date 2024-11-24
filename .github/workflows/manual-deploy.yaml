@@ -30,7 +30,7 @@ jobs:
         cluster_name: myk8-cluster
         location: us-central1-c 
     
-    - name: Configure gcloud CLI
+    - name: Deploy to Kubernetes Cluster
       run: |    
         kubectl get ns
          
