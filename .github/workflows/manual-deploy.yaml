@@ -26,7 +26,5 @@ jobs:
       run: |   
         gcloud config set compute/zone us-central1-c
         gcloud container clusters get-credentials myk8-cluster
-        
-    - name: Deploy to GKE
-      run: |
         kubectl get ns
+         
