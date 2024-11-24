@@ -12,8 +12,7 @@ on:
 jobs:
 
   deploy:
-    runs-on: ubuntu-latest
-    needs: build 
+    runs-on: ubuntu-latest 
     steps:
     # Check out the repository
     - name: Check Out Code
