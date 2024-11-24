@@ -4,7 +4,7 @@ metadata:
   labels:
     app: hello-world-rest-api
   name: hello-world-rest-api
-  namespace: {{NAME_SPACE}}
+  namespace: ${NAME_SPACE}
 spec:
   replicas: 3
   selector:
@@ -16,5 +16,5 @@ spec:
         app: hello-world-rest-api
     spec:
       containers:
-      - image: us-central1-docker.pkg.dev/engaged-mariner-440619-n5/my-app-ms-repository/{{IMAGE_NAME}}
+      - image: us-central1-docker.pkg.dev/engaged-mariner-440619-n5/my-app-ms-repository/${IMAGE_NAME}
         name: hello-world-rest-api
