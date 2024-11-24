@@ -3,11 +3,13 @@ name: Manual Deployment
 on:
   workflow_dispatch:
     inputs:
-      image:
+      IMAGE_NAME:
         description: "Image to Deploy"
         required: true
         type: string
 
+env:
+  NAME_SPACE: myapp-k8s-dev
 
 jobs:
 
@@ -29,8 +31,12 @@ jobs:
       with:
         cluster_name: myk8-cluster
         location: us-central1-c 
+ 
     
     - name: Deploy to Kubernetes Cluster
       run: |    
-        kubectl get ns
+        export NAME_SPACE=${{ env.NAME_SPACE }}
+        export IMAGE_NAME=${{ inputs.IMAGE_NAME }}
+        envsubst < deployment.yaml > updated-deployment.yaml
+        kubectl apply -f updated-deployment.yaml
          
