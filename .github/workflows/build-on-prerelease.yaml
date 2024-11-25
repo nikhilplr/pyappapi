@@ -39,7 +39,7 @@ jobs:
         run: |
           IMAGE_NAME="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-app-ms-repository/pyappapi"
           docker build -t ${IMAGE_NAME}:${{ env.TAG_NAME }} . 
-          echo "::set-output name=image_tag_name::${IMAGE_NAME}::${{ env.TAG_NAME }}"
+          echo "::set-output name=image_tag_name::${IMAGE_NAME}:${{ env.TAG_NAME }}"
       
       - name: Push Docker Image to GCR
         run: | 
