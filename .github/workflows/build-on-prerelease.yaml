@@ -10,7 +10,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest  
-
+    outputs:
+      image_tag_name: ${{ steps.build_image.outputs.image_tag_name }}
     steps:
       - name: Check Out Repository
         uses: actions/checkout@v3 
@@ -37,7 +38,7 @@ jobs:
         run: |
           IMAGE_NAME="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-app-ms-repository/pyappapi"
           docker build -t ${IMAGE_NAME}:${{ env.TAG_NAME }} . 
-          echo "IMAGE_TAG_NAME=${IMAGE_NAME}:${{ env.TAG_NAME }}" >> $GITHUB_ENV 
+          echo "image_tag_name=${IMAGE_NAME}:${{ env.TAG_NAME }}" >> "$GITHUB_OUTPUT"
       
       - name: Push Docker Image to GCR
         run: | 
@@ -68,7 +69,7 @@ jobs:
     - name: Deploy to Kubernetes Cluster
       run: |    
         export NAME_SPACE=${{ env.NAME_SPACE }} 
-        export IMAGE_NAME=${{ env.IMAGE_TAG_NAME }}
+        export IMAGE_NAME="${{ needs.build.outputs.image_tag_name }}"
         envsubst < deployment.yaml > updated-deployment.yaml
         envsubst < service.yaml > updated-service.yaml
         kubectl apply -f updated-deployment.yaml
