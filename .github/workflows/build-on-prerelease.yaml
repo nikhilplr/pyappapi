@@ -69,7 +69,7 @@ jobs:
     - name: Deploy to Kubernetes Cluster
       run: |    
         export NAME_SPACE=${{ env.NAME_SPACE }} 
-        export IMAGE_NAME="${{ needs.build.outputs.image_tag_name }}"
+        export IMAGE_NAME="pyappapi:${{ needs.build.outputs.image_tag_name }}"
         envsubst < deployment.yaml > updated-deployment.yaml
         envsubst < service.yaml > updated-service.yaml
         kubectl apply -f updated-deployment.yaml
