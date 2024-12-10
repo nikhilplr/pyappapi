@@ -7,7 +7,7 @@ on:
       - main  # Trigger on push to the main branch
   workflow_dispatch:  # Allows triggering the workflow manually (for deploy)
     inputs:
-      environment:
+      MY_ENV:
         description: 'Select the environment for deployment'
         required: true
         type: choice
@@ -84,7 +84,7 @@ jobs:
 
       - name: Deploy to environment
         run: |
-          export TAG_NAME=${{ env.image_tag_name }}
-          export MyENV=${{ inputs.environment }} 
+          export TAG_NAME=${{ needs.build.outputs.image_tag_name }}
+          export MyENV=${{ inputs.MY_ENV }} 
           echo "Deploying to ${{ inputs.environment }}" 
-          echo "Using image tag: ${{inputs.TAG_NAME || env.image_tag_name }}" # Use manual or generated TAG_NAME
+          echo "Using image tag: ${{inputs.TAG_NAME || TAG_NAME }}" # Use manual or generated TAG_NAME
