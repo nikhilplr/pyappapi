@@ -84,7 +84,7 @@ jobs:
 
       - name: Deploy to environment
         run: |
-          export TAG_NAME=${{ env.NAME_SPACE }}
+          export TAG_NAME=${{ env.image_tag_name }}
           export MyENV=${{ inputs.environment }} 
           echo "Deploying to ${{ inputs.environment }}" 
-          echo "Using image tag: ${{inputs.TAG_NAME || env.TAG_NAME }}" # Use manual or generated TAG_NAME
+          echo "Using image tag: ${{inputs.TAG_NAME || env.image_tag_name }}" # Use manual or generated TAG_NAME
