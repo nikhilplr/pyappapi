@@ -10,8 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # Run the build if the event is push OR if the environment is 'dev'
-    if: ${{ github.event_name == 'push' || github.event.inputs.environment == 'dev' }}  
+    outputs:
+      image_tag_name: ${{ steps.build_image.outputs.image_tag_name }} 
     steps:
       - name: Check Out Repository
         uses: actions/checkout@v3
