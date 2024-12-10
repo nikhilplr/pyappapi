@@ -16,6 +16,10 @@ on:
           - staging
           - production
         default: dev  # Default environment to be used if no manual input is provided
+      TAG_NAME:
+        description: 'Tag name for the image to deploy'
+        required: false
+        default: 'dev'  # Default value for TAG_NAME when not provided
 
 jobs:
   build:
@@ -36,16 +40,22 @@ jobs:
         run: |
           gcloud auth configure-docker us-central1-docker.pkg.dev
 
-      - name: Generate dynamic build number
+      - name: Generate dynamic build number (if TAG_NAME not provided)
         id: generate_build_number
         run: |
-          # Use Git commit SHA, GitHub Run number, and timestamp to create a unique tag
-          COMMIT_SHA=${GITHUB_SHA:0:7}  # Get the first 7 characters of the commit SHA
-          RUN_NUMBER=${GITHUB_RUN_NUMBER}  # GitHub sequential run number for this workflow
-          TIMESTAMP=$(date +'%Y%m%d%H%M%S')  # Get current timestamp (e.g., 20231210153045)
+          # Check if TAG_NAME is provided in the manual trigger
+          if [ -z "${{ github.event.inputs.TAG_NAME }}" ]; then
+            # Use Git commit SHA, GitHub Run number, and timestamp to create a unique tag
+            COMMIT_SHA=${GITHUB_SHA:0:7}  # Get the first 7 characters of the commit SHA
+            RUN_NUMBER=${GITHUB_RUN_NUMBER}  # GitHub sequential run number for this workflow
+            TIMESTAMP=$(date +'%Y%m%d%H%M%S')  # Get current timestamp (e.g., 20231210153045)
 
-          # Combine them to form a unique tag
-          TAG_NAME="${COMMIT_SHA}-${RUN_NUMBER}-${TIMESTAMP}"
+            # Combine them to form a unique tag
+            TAG_NAME="${COMMIT_SHA}-${RUN_NUMBER}-${TIMESTAMP}"
+          else
+            # Use the provided TAG_NAME if it exists
+            TAG_NAME="${{ github.event.inputs.TAG_NAME }}"
+          fi
 
           echo "Build Tag: $TAG_NAME"  # Display for debug purposes
 
@@ -66,12 +76,12 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build  # Ensure deploy only runs after the build job completes
-    if: ${{ github.event_name == 'workflow_dispatch' }}  # Only run deploy if triggered manually
+    needs: build  # Ensure deploy only runs after the build job completes 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Deploy to environment
         run: |
-          echo "Deploying to ${{ github.event.inputs.environment }}"  
+          echo "Deploying to ${{ github.event.inputs.environment }}" 
+          echo "Using image tag: ${{ github.event.inputs.TAG_NAME || env.TAG_NAME }}" # Use manual or generated TAG_NAME
