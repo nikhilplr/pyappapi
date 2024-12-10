@@ -4,18 +4,17 @@ on:
   workflow_dispatch:
     inputs:
       IMAGE_NAME:
-        description: "ImagetTag"
+        description: "Image Tag"
         required: true
-        type: string
         default: pyappapi:v1.0.33
       RUN_ENVIRONMENT:
-        description: "Env to Run"
+        description: "Environment to Run"
         required: true
         type: choice
         options:
           - dev
           - staging
-          - production 
+          - production
         default: dev
 
   repository_dispatch:
@@ -26,24 +25,23 @@ env:
   NAME_SPACE: myapp-k8s-dev
 
 jobs:
-
   deploy:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     steps:
-    # Check out the repository
-    - name: Check Out Code
-      uses: actions/checkout@v3 
-      
-    - name: Deploy to Kubernetes Cluster
-      run: |    
-        export NAME_SPACE=${{ env.NAME_SPACE }}
-        export IMAGE_NAME=${{ inputs.IMAGE_NAME }}
-        export My_ENV=${{ inputs.RUN_ENVIRONMENT }}
-        #envsubst < deployment.yaml > updated-deployment.yaml
-        #envsubst < service.yaml > updated-service.yaml
-        #kubectl apply -f updated-deployment.yaml
-        #kubectl apply -f updated-service.yaml
-        echo "{{ $NAME_SPACE }}"
-        echo "{{ $NAME_SPACE }}"
-        echo "{{ $IMAGE_NAME }}"
-         
+      # Check out the repository
+      - name: Check Out Code
+        uses: actions/checkout@v3 
+
+      - name: Deploy to Kubernetes Cluster
+        run: |
+          export NAME_SPACE=${{ env.NAME_SPACE }}
+          export IMAGE_NAME=${{ github.event.inputs.IMAGE_NAME }}
+          export My_ENV=${{ github.event.inputs.RUN_ENVIRONMENT }}
+          # Uncomment the following lines if you need to update and apply Kubernetes manifests
+          # envsubst < deployment.yaml > updated-deployment.yaml
+          # envsubst < service.yaml > updated-service.yaml
+          # kubectl apply -f updated-deployment.yaml
+          # kubectl apply -f updated-service.yaml
+          echo "Namespace: $NAME_SPACE"
+          echo "Environment: $My_ENV"
+          echo "Image Name: $IMAGE_NAME"
