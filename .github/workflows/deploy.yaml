@@ -16,7 +16,11 @@ on:
           - dev
           - staging
           - production 
-        default: dev 
+        default: dev
+
+  repository_dispatch:
+    types:
+      - deploy
 
 env:
   NAME_SPACE: myapp-k8s-dev
@@ -28,21 +32,8 @@ jobs:
     steps:
     # Check out the repository
     - name: Check Out Code
-      uses: actions/checkout@v3
-
-    - name: Set Up Google Cloud SDK
-      uses: google-github-actions/auth@v2
-      with:
-        credentials_json: ${{ secrets.GCP_KEY }} 
-
-    # Get the GKE credentials so we can deploy to the cluster
-    - name: Set up GKE credentials
-      uses: google-github-actions/get-gke-credentials@v0
-      with:
-        cluster_name: myk8-cluster
-        location: us-central1-c 
- 
-    
+      uses: actions/checkout@v3 
+      
     - name: Deploy to Kubernetes Cluster
       run: |    
         export NAME_SPACE=${{ env.NAME_SPACE }}
