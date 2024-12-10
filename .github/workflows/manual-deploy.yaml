@@ -4,10 +4,23 @@ on:
   workflow_dispatch:
     inputs:
       IMAGE_NAME:
-        description: "Image to Deploy"
+        description: "ImagetTag"
         required: true
         type: string
         default: pyappapi:v1.0.33
+      RUN_ENVIRONMENT:
+        description: "Env to Run"
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - production 
+        default: dev
+
+  repository_dispatch:
+    types:
+      - deploy
 
 env:
   NAME_SPACE: myapp-k8s-dev
@@ -38,8 +51,12 @@ jobs:
       run: |    
         export NAME_SPACE=${{ env.NAME_SPACE }}
         export IMAGE_NAME=${{ inputs.IMAGE_NAME }}
-        envsubst < deployment.yaml > updated-deployment.yaml
-        envsubst < service.yaml > updated-service.yaml
-        kubectl apply -f updated-deployment.yaml
-        kubectl apply -f updated-service.yaml
+        export My_ENV=${{ inputs.RUN_ENVIRONMENT }}
+        #envsubst < deployment.yaml > updated-deployment.yaml
+        #envsubst < service.yaml > updated-service.yaml
+        #kubectl apply -f updated-deployment.yaml
+        #kubectl apply -f updated-service.yaml
+        echo "{{ $NAME_SPACE }}"
+        echo "{{ $NAME_SPACE }}"
+        echo "{{ $IMAGE_NAME }}"
          
