@@ -12,17 +12,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Repository
-        uses: actions/checkout@v3 
+        uses: actions/checkout@v3
 
       - name: Set Up Google Cloud SDK
         uses: 'google-github-actions/auth@v2'
         with:
           version: 'latest'
-          credentials_json: ${{ secrets.GCP_KEY }} 
+          credentials_json: ${{ secrets.GCP_KEY }}
 
       - name: Authenticate Docker to GCR
         run: |
-          gcloud auth configure-docker  us-central1-docker.pkg.dev
+          gcloud auth configure-docker us-central1-docker.pkg.dev
 
       - name: Generate dynamic build number
         id: generate_build_number
@@ -34,9 +34,9 @@ jobs:
 
           # Combine them to form a unique tag
           TAG_NAME="${COMMIT_SHA}-${RUN_NUMBER}-${TIMESTAMP}"
-          
+
           echo "Build Tag: $TAG_NAME"  # Display for debug purposes
-          
+
           # Save the build tag as an output to be used in the next steps
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
 
@@ -44,11 +44,11 @@ jobs:
         id: build_image
         run: |
           IMAGE_NAME="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-app-ms-repository/pyappapi"
-          docker build -t ${IMAGE_NAME}:${{ env.TAG_NAME }} . 
+          docker build -t ${IMAGE_NAME}:${{ env.TAG_NAME }} .
           echo "image_tag_name=${{ env.TAG_NAME }}" >> "$GITHUB_OUTPUT"
-      
+
       - name: Push Docker Image to GCR
-        run: | 
+        run: |
           IMAGE_NAME="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-app-ms-repository/pyappapi"
           docker push ${IMAGE_NAME}:${{ env.TAG_NAME }}
 
@@ -65,12 +65,13 @@ jobs:
           - dev
           - staging
           - production
-        default: dev
-    
+        default: dev  # Default environment to be used if no manual input is provided
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Deploy to environment
         run: |
-          echo "Deploying to ${{ github.event.inputs.environment }}"    
+          echo "Deploying to ${{ github.event.inputs.environment }}" 
+          echo "Deploying to {{ github.event.inputs.environment }} environment..."
