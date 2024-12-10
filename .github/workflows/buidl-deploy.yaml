@@ -82,10 +82,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy to environment
+      - name: Set environment variables
         run: |
-          export TAG_NAME=${{ needs.build.outputs.image_tag_name }}
-          export IN_TAG_NAME=${{ inputs.image_tag_name }}
-          export MyENV=${{ inputs.MY_ENV }} 
-          echo "Deploying to ${{ inputs.environment }}" 
-          echo "Using image tag: ${{ TAG_NAME || IN_TAG_NAME }}" # Use manual or generated TAG_NAME
+          # Get the image tag name from the build job outputs (needs.build)
+          TAG_NAME="${{ needs.build.outputs.image_tag_name }}"   
+          IN_TAG_NAME="${{ github.event.inputs.TAG_NAME }}"  
+          
+          # Fallback logic: Use the manual input if available, otherwise use the build-generated tag
+          FINAL_TAG_NAME="${IN_TAG_NAME:-$TAG_NAME}"
+          
+          # Get environment from manual input
+          MY_ENV="${{ github.event.inputs.environment }}"
+          
+          echo "Deploying to environment: $MY_ENV"
+          echo "Using image tag: $FINAL_TAG_NAME"
+
+          # Add your deploy logic here, for example:
+          if [ "$MY_ENV" == "dev" ]; then
+            echo "Deploying to development environment"
+            # Deploy logic for dev environment
+          elif [ "$MY_ENV" == "staging" ]; then
+            echo "Deploying to staging environment"
+            # Deploy logic for staging environment
+          elif [ "$MY_ENV" == "production" ]; then
+            echo "Deploying to production environment"
+            # Deploy logic for production environment
+          fi
