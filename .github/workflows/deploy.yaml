@@ -18,6 +18,20 @@ on:
         default: dev
 
   repository_dispatch:
+    inputs:
+      IMAGE_NAME:
+        description: "Image Tag"
+        required: true
+        default: pyappapi:v1.0.33
+      RUN_ENVIRONMENT:
+        description: "Environment to Run"
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - production
+        default: dev
     types:
       - deploy
 
