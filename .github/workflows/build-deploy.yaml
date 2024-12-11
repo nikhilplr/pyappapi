@@ -74,22 +74,4 @@ jobs:
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             https://api.github.com/repos/${{ github.repository }}/dispatches \
             -d '{"event_type": "deploy", "client_payload": {"IMAGE_NAME": "'"${{ needs.build.outputs.image_tag_name }}"'","RUN_ENVIRONMENT":"dev"}}'
-      - name: Deploy Status
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-        run: |
-          echo "Waiting for the triggered workflow to complete..."
-          while :; do
-            sleep 30
-            STATUS=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
-              -H "Accept: application/vnd.github+json" \
-              https://api.github.com/repos/$REPO/actions/runs \
-              | jq -r '.workflow_runs[] | select(.event == "repository_dispatch") | .status')
-            
-            echo "Current status: $STATUS"
-            if [[ "$STATUS" == "completed" ]]; then
-              echo "Triggered workflow has completed."
-              break
-            fi
-          done
+      
