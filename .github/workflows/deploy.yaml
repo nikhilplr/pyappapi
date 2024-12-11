@@ -18,20 +18,6 @@ on:
         default: dev
 
   repository_dispatch:
-    inputs:
-      IMAGE_NAME:
-        description: "Image Tag"
-        required: true
-        default: pyappapi:v1.0.33
-      RUN_ENVIRONMENT:
-        description: "Environment to Run"
-        required: true
-        type: choice
-        options:
-          - dev
-          - staging
-          - production
-        default: dev
     types:
       - deploy
 
@@ -44,18 +30,29 @@ jobs:
     steps:
       # Check out the repository
       - name: Check Out Code
-        uses: actions/checkout@v3 
+        uses: actions/checkout@v3
 
+      # Determine the source of inputs (workflow_dispatch or repository_dispatch)
+      - name: Determine Input Source
+        id: input-source
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "source=workflow_dispatch" >> $GITHUB_ENV
+            echo "IMAGE_NAME=${{ github.event.inputs.IMAGE_NAME }}" >> $GITHUB_ENV
+            echo "RUN_ENVIRONMENT=${{ github.event.inputs.RUN_ENVIRONMENT }}" >> $GITHUB_ENV
+          elif [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "source=repository_dispatch" >> $GITHUB_ENV
+            echo "IMAGE_NAME=${{ github.event.client_payload.IMAGE_NAME }}" >> $GITHUB_ENV
+            echo "RUN_ENVIRONMENT=${{ github.event.client_payload.RUN_ENVIRONMENT }}" >> $GITHUB_ENV
+          else
+            echo "Unsupported event: ${{ github.event_name }}"
+            exit 1
+          fi
+
+      # Use the inputs determined from the source
       - name: Deploy to Kubernetes Cluster
         run: |
-          export NAME_SPACE=${{ env.NAME_SPACE }}
-          export IMAGE_NAME=${{ github.event.inputs.IMAGE_NAME }}
-          export My_ENV=${{ github.event.inputs.RUN_ENVIRONMENT }}
-          # Uncomment the following lines if you need to update and apply Kubernetes manifests
-          # envsubst < deployment.yaml > updated-deployment.yaml
-          # envsubst < service.yaml > updated-service.yaml
-          # kubectl apply -f updated-deployment.yaml
-          # kubectl apply -f updated-service.yaml
+          echo "Source: $source"
           echo "Namespace: $NAME_SPACE"
-          echo "Environment: $My_ENV"
           echo "Image Name: $IMAGE_NAME"
+          echo "Environment: $RUN_ENVIRONMENT" 
