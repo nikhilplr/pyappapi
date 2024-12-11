@@ -69,9 +69,8 @@ jobs:
       - name: Trigger Deploy Workflow
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: | 
-          export IMAGE_NAME=${{ needs.build.outputs.image_tag_name }} 
+        run: |  
           curl -X POST -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             https://api.github.com/repos/${{ github.repository }}/dispatches \
-            -d '{"event_type": "deploy", "client_payload": {"IMAGE_NAME": "$IMAGE_NAME"}}'
+            -d '{"event_type": "deploy", "client_payload": {"IMAGE_NAME": "'"${{ needs.build.outputs.image_tag_name }}"'","RUN_ENVIRONMENT":"dev"}}'
